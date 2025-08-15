@@ -1,0 +1,236 @@
+<div *ngIf="formLoading()" class="d-flex justify-content-center align-items-center py-5" style="min-height: 300px;">
+  <c-spinner size="lg" variant="grow" color="primary"></c-spinner>
+</div>
+
+<c-card class="p-4 shadow" *ngIf="!formLoading()">
+  <form cForm [formGroup]="visitForm" (ngSubmit)="addVisit()">
+    <!-- Header Section -->
+    <div class="mb-4">
+      <h4 class="text-primary fw-bold">{{ 'VISITS.ADD_NEW_VISIT' | translate }}</h4>
+      <p class="text-muted">{{ 'VISITS.FILL_DETAILS' | translate }}</p>
+    </div>
+
+    <!-- Visit Date Section -->
+    <c-card class="mb-4">
+      <c-card-header class="bg-light">
+        <h5 class="mb-0">{{ 'VISITS.BASIC_INFO' | translate }}</h5>
+      </c-card-header>
+      <c-card-body>
+        <c-row class="g-3 align-items-center">
+          <c-col xs="12" lg="6">
+            <c-input-group>
+              <span cInputGroupText class="d-flex align-items-center">
+                <svg [cIcon]="icons.cilCalendar" class="me-2" size="lg"></svg>
+                {{ 'VISITS.VISIT_DATE' | translate }}
+              </span>
+              <c-date-picker
+                [placeholder]="'FORMS.SELECT_DATE' | translate"
+                class="w-100"
+                [locale]="'ar'"
+                dir="rtl"
+                formControlName="visitDate"
+                [minDate]="minDate"
+                [maxDate]="maxDate"
+              />
+            </c-input-group>
+            <small class="form-text text-muted">{{ 'VISITS.SELECT_DATE_HELP' | translate }}</small>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+
+    <!-- Doctor & Clinic Section -->
+    <c-card class="mb-4">
+      <c-card-body>
+        <c-row class="g-3">
+          <c-col xs="12" lg="6">
+            <div class="mb-3">
+              <label cLabel class="d-flex align-items-center">
+                <svg [cIcon]="icons.cilUser" class="me-2" size="lg"></svg>
+                {{ 'VISITS.DOCTOR_NAME' | translate }}
+              </label>
+              <select cSelect formControlName="doctorId" class="form-select-lg">
+                <option [ngValue]="null">{{ 'VISITS.SELECT_DOCTOR' | translate }}</option>
+                @for(doctor of visitFormData?.doctors; track doctor.id) {
+                  <option [ngValue]="doctor.id">{{ doctor.value }}</option>
+                }
+              </select>
+              @if(visitForm.get('doctorId')?.invalid && visitForm.get('doctorId')?.touched) {
+                <div class="invalid-feedback d-block">{{ 'FORMS.DOCTOR_REQUIRED' | translate }}</div>
+              }
+            </div>
+          </c-col>
+
+          <c-col xs="12" lg="6">
+            <div class="mb-3">
+              <label cLabel class="d-flex align-items-center">
+                <svg [cIcon]="icons.cilBuilding" class="me-2" size="lg"></svg>
+                {{ 'VISITS.CLINIC_NAME' | translate }}
+              </label>
+              <select cSelect formControlName="organizationId" class="form-select-lg">
+                <option [value]="null">{{ 'VISITS.SELECT_CLINIC' | translate }}</option>
+                @for(org of visitFormData?.organizations; track org.id) {
+                  <option [value]="org.id">{{ org.value }}</option>
+                }
+              </select>
+              @if(visitForm.get('organizationId')?.invalid && visitForm.get('organizationId')?.touched) {
+                <div class="invalid-feedback d-block">{{ 'FORMS.CLINIC_REQUIRED' | translate }}</div>
+              }
+            </div>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+
+    <!-- Products Section -->
+    <c-card class="mb-4">
+      <c-card-header class="bg-light">
+        <h5 class="mb-0">{{ 'VISITS.PRODUCTS_AND_SAMPLES' | translate }}</h5>
+      </c-card-header>
+      <c-card-body>
+        <div formArrayName="productBlocks">
+          <div *ngFor="let block of productBlocks.controls; let i = index" [formGroupName]="i" class="product-block mb-4 p-3 border rounded">
+            <!-- Product + Message -->
+            <c-row class="g-3">
+              <c-col xs="12" lg="6">
+                <div class="mb-3">
+                  <label cLabel class="d-flex align-items-center">
+                    <svg [cIcon]="icons.cilMedicalCross" class="me-2" size="lg"></svg>
+                    {{ 'VISITS.MEDICINE' | translate }}
+                  </label>
+                  <select cSelect formControlName="productId" class="form-select-lg">
+                    <option [value]="null">{{ 'VISITS.SELECT_MEDICINE' | translate }}</option>
+                    @for(product of visitFormData?.products; track product.id) {
+                      <option [value]="product.id">{{ product.name }}</option>
+                    }
+                  </select>
+                  @if(block.get('productId')?.invalid && block.get('productId')?.touched) {
+                    <div class="invalid-feedback d-block">{{ 'FORMS.MEDICINE_REQUIRED' | translate }}</div>
+                  }
+                </div>
+              </c-col>
+
+              <c-col xs="12" lg="6">
+                <div class="mb-3">
+                  <label cLabel class="d-flex align-items-center">
+                    <svg [cIcon]="icons.cilEnvelopeClosed" class="me-2" size="lg"></svg>
+                    {{ 'VISITS.MESSAGE' | translate }}
+                  </label>
+                  <select cSelect formControlName="messageId" class="form-select-lg">
+                    <option [value]="null">{{ 'VISITS.SELECT_MESSAGE' | translate }}</option>
+                    @for(message of block.get('availableMessages').value; track message.id) {
+                      <option [value]="message.id">{{ message.value }}</option>
+                    }
+                  </select>
+                </div>
+              </c-col>
+            </c-row>
+
+            <!-- Samples -->
+            <c-row>
+              <c-col xs="12" lg="4">
+                <div class="mb-3">
+                  <label cLabel class="d-flex align-items-center">
+                    <svg [cIcon]="icons.cilAlignCenter" class="me-2" size="lg"></svg>
+                    {{ 'VISITS.SAMPLES_COUNT' | translate }}
+                  </label>
+                  <input
+                    cFormControl
+                    type="number"
+                    formControlName="samples"
+                    placeholder="0"
+                    min="0"
+                    class="form-control-lg"
+                  />
+                </div>
+              </c-col>
+            </c-row>
+
+            <!-- Add/Remove Buttons -->
+            <div class="d-flex justify-content-end mt-2">
+              <button
+                *ngIf="i === productBlocks.length - 1 && productBlocks.length < 3"
+                cButton
+                color="success"
+                class="me-2 text-light fw-bold"
+                (click)="addProductBlock()"
+                type="button"
+              >
+                <svg [cIcon]="icons.cilPlus" class="me-1"></svg>
+                {{ 'VISITS.ADD_ANOTHER_PRODUCT' | translate }}
+              </button>
+              <button
+                *ngIf="productBlocks.length > 1"
+                cButton
+                color="danger"
+                class="text-light fw-bold"
+                (click)="removeProductBlock(i)"
+                type="button"
+              >
+                <svg [cIcon]="icons.cilMinus" class="me-1"></svg>
+                {{ 'VISITS.REMOVE_PRODUCT' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </c-card-body>
+    </c-card>
+
+    <!-- Supervisor & Notes Section -->
+    <c-card class="mb-4">
+      <c-card-body>
+        <c-row class="g-3">
+          <!-- Supervisor Checkbox -->
+          <c-col xs="12" class="mb-3">
+            <div class="form-check form-switch form-check-lg d-flex align-items-center">
+              <input
+                cFormCheckInput
+                class="form-check-input"
+                type="checkbox"
+                id="supervisorCheck"
+                formControlName="hasSupervisor"
+                value="true"
+              />
+              <label class="form-check-label ms-3" for="supervisorCheck">
+                <svg [cIcon]="icons.cilPeople" class="me-2"></svg>
+                {{ 'VISITS.WITH_SUPERVISOR' | translate }}
+              </label>
+            </div>
+          </c-col>
+
+          <!-- Notes -->
+          <c-col xs="12">
+            <div class="mb-3">
+              <label cLabel class="d-flex align-items-center">
+                <svg [cIcon]="icons.cilDescription" class="me-2" size="lg"></svg>
+                {{ 'VISITS.NOTES' | translate }}
+              </label>
+              <textarea
+                cFormControl
+                [placeholder]="'VISITS.NOTES_PLACEHOLDER' | translate"
+                rows="4"
+                formControlName="notes"
+                class="form-control-lg"
+              ></textarea>
+            </div>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+
+    <!-- Submit Button -->
+    <div class="d-grid">
+      <button
+        cButton
+        color="primary"
+        size="lg"
+        type="submit"
+        [disabled]="visitForm.invalid"
+        class="py-3 fw-bold"
+      >
+        <svg [cIcon]="icons.cilSave" class="me-2"></svg>
+        {{ 'VISITS.REGISTER_VISIT' | translate }}
+      </button>
+    </div>
+  </form>
+</c-card>

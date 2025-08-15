@@ -1,0 +1,53 @@
+/* Add these styles to your component or global styles */
+.product-block {
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.product-block:hover {
+  background-color: #f1f3f5;
+}
+
+.form-check-input {
+  width: 3rem !important;
+  height: 1.5rem !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-select-lg, .form-control-lg {
+    font-size: 1rem !important;
+    padding: 0.5rem 1rem !important;
+  }
+}
+
+/* Better spacing for form elements */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Validation styles */
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+  font-size: 0.875rem;
+  color: #dc3545;
+}
+
+/* Card styling */
+c-card {
+  border-radius: 0.5rem !important;
+  overflow: hidden;
+}
+
+/* Button hover effects */
+.btn {
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

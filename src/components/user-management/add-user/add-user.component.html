@@ -1,0 +1,108 @@
+<c-card class="p-4 shadow">
+  <form cForm [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- Full Name -->
+    <c-row class="mb-3">
+      <c-col>
+        <div class="d-flex justify-content-start align-items-center ">
+          <svg class="me-2 mb-2" [cIcon]="icons.cilPen" size="lg" title="User Icon"></svg>
+          <label cLabel class="form-label"> الاسم الكامل </label>
+        </div>
+        <input cInput type="text" class="form-control" formControlName="fullName" placeholder="أدخل الاسم الكامل" />
+      </c-col>
+    </c-row>
+
+       <!-- User Name -->
+    <c-row class="mb-3">
+      <c-col>
+        <div class="d-flex justify-content-start align-items-center ">
+          <svg class="me-2 mb-2" [cIcon]="icons.cilUser" size="lg" title="User Icon"></svg>
+          <label cLabel class="form-label"> اسم المستخدم </label>
+        </div>
+        <input cInput type="text" class="form-control" formControlName="userName" placeholder="أدخل اسم المستخدم" />
+      </c-col>
+    </c-row>
+
+    <!-- Email -->
+    <c-row class="mb-3">
+      <c-col>
+        <div class="d-flex justify-content-start align-items-center">
+          <svg class="me-2 mb-2" [cIcon]="icons.cilEnvelopeOpen" size="lg" title="Email Icon"></svg>
+          <label cLabel class="form-label"> البريد الإلكتروني </label>
+        </div>
+        <input cInput type="email" class="form-control text-end" formControlName="email" placeholder="أدخل البريد الإلكتروني" />
+      </c-col>
+    </c-row>
+
+    <!-- Phone Number -->
+    <c-row class="mb-3">
+      <c-col>
+        <div class="d-flex justify-content-start align-items-center">
+          <svg class="me-2 mb-2" [cIcon]="icons.cilPhone" size="lg" title="Phone Icon"></svg>
+          <label cLabel class="form-label"> رقم الهاتف </label>
+        </div>
+        <input cInput type="text" class="form-control" formControlName="phone" placeholder="أدخل رقم الهاتف" />
+      </c-col>
+    </c-row>
+
+    <!-- Password -->
+    <c-row class="mb-3">
+      <c-col>
+        <div class="d-flex justify-content-start align-items-center">
+          <svg class="me-2 mb-2" [cIcon]="icons.cilLockLocked" size="lg" title="Password Icon"></svg>
+          <label cLabel class="form-label"> كلمة المرور </label>
+        </div>
+        <input cInput type="password" class="form-control" formControlName="password" placeholder="أدخل كلمة المرور" />
+      </c-col>
+    </c-row>
+
+        <!-- Confirm Password -->
+    <c-row class="mb-3">
+      <c-col>
+        <div class="d-flex justify-content-start align-items-center">
+          <svg class="me-2 mb-2" [cIcon]="icons.cilLockLocked" size="lg" title="Password Icon"></svg>
+          <label cLabel class="form-label"> تأكيد كلمة المرور </label>
+        </div>
+        <input cInput type="password" class="form-control" formControlName="confirmPassword" placeholder="أدخل تأكيد كلمة المرور" />
+      </c-col>
+    </c-row>
+
+   <!-- Confirm Password -->
+    <c-row class="mb-3">
+      <c-col>
+        <div class="d-flex justify-content-start align-items-center">
+          <svg class="me-2 mb-2" [cIcon]="icons.cilShieldAlt" size="lg" title="Password Icon"></svg>
+          <label cLabel class="form-label">صلاحية المستخدم</label>
+        </div>
+        
+        <select aria-label="Default select example" cSelect class="form-select" formControlName="role">
+                <option value=null  disabled>اختر صلاحية المستخدم</option>
+                <option value="1">مندوب اعلانات</option>
+                <option value="2">مشرف اعلانات</option>
+                <option value="3">مندوب مبيعات</option>
+                <option value="4">مشرف مبيعات</option>
+                <option value="5">محصل طلبات</option>
+                <option value="6">محصل مدفوعات</option>
+                <option value="7">مدير مالي</option>
+                <option value="8">مدير عام</option>
+                <option value="9">مساعد</option>
+                <option value="10">مسئول</option>
+        </select>
+      </c-col>
+    </c-row>
+
+    <!-- Submit Button -->
+    <c-row class="mt-4">
+      <c-col xs="12">
+        <button cButton color="primary" size="md" type="submit" class="col-12 d-flex align-items-center justify-content-center" [disabled]="form.invalid">
+          <svg [cIcon]="icons.cilSave" class="me-2 align-middle" size="xl" title="Save Icon"></svg>
+          <span class="align-middle">إضافة مستخدم</span>
+        </button>
+      </c-col>
+    </c-row>
+  </form>
+</c-card>
+
+<!-- Additional styling or content -->
+<div class="pb-5"></div>
+<div class="pb-5"></div>

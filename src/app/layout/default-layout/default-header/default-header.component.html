@@ -1,0 +1,236 @@
+<!--<c-header class="mb-4 d-print-none" position="sticky">-->
+<ng-container>
+  <c-container [fluid]="true" class="border-bottom px-4">
+    <button
+      [cSidebarToggle]="sidebarId()"
+      cHeaderToggler
+      class="btn"
+      toggle="visible"
+      style="margin-inline-start: -14px;"
+      aria-label="Toggle sidebar navigation"
+    >
+      <svg cIcon name="cilMenu" size="lg"></svg>
+    </button>
+
+ <!-- ─── Centered Session / Current Time Panel ─── -->
+  <c-header-nav
+    class="
+      position-absolute
+      end-50
+      translate-middle-x
+      h-100
+      d-flex
+      align-items-center
+    "
+  >
+    <!-- Session Time -->
+ 
+    <!-- Current Time -->
+    <div class="d-flex align-items-center">
+      <svg cIcon name="cilClock" size="lg" class="me-3 text-primary"></svg>
+      <div class="text-center">
+        <div class="small text-muted">{{ 'HEADER.CURRENT_TIME' | translate }}</div>
+        <div class="fw-semibold">{{ currentTime }}</div>
+      </div>
+    </div>
+    
+    <div class="vr h-25 mx-3 text-body-secondary my-auto"></div>
+
+       <div class="d-flex align-items-center">
+      <div class="text-center">
+        <div class="small text-muted">{{ 'HEADER.SESSION_TIME' | translate }}</div>
+        <div class="fw-semibold">{{ sessionTime }}</div>
+      </div>
+      <svg cIcon name="cilAvTimer" size="lg" class="ms-3 text-primary"></svg>
+    </div>
+  </c-header-nav>
+  <!-- ──────────────────────────────────────────────── -->
+   
+    <c-header-nav class="d-md-flex ms-auto ">
+      <ng-container *ngTemplateOutlet="notifyDropdown" />
+    </c-header-nav>
+
+    <c-header-nav class="ms-0">
+      <div class="nav-item py-1">
+        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+      </div>
+      <!-- <ng-container *ngTemplateOutlet="themeDropdown" />
+      <div class="nav-item py-1">
+        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+      </div> -->
+    </c-header-nav>
+
+      <c-header-nav class="ms-0">
+          <ng-container *ngTemplateOutlet="languageDropdown" />
+      <div class="nav-item py-1">
+        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+      </div>
+    </c-header-nav>
+
+    <c-header-nav class="ms-0">
+          <ng-container *ngTemplateOutlet="activitiesLogDropDown" />
+      <div class="nav-item py-1">
+        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+      </div>
+    </c-header-nav>
+
+    <c-header-nav class="ms-0">
+      <ng-container *ngTemplateOutlet="userDropdown" />
+    </c-header-nav>
+
+    <!--aside toggler-->
+      <!--aside toggler-->
+    <!-- <button
+      cHeaderToggler
+      cSidebarToggle="aside1"
+      style="margin-inline-end: -12px"
+      toggle="visible"
+    >
+      <svg cIcon name="cilApplicationsSettings" size="lg"></svg>
+    </button> -->
+  </c-container>
+  <c-container [fluid]="true" class="px-4">
+    <c-breadcrumb-router />
+  </c-container>
+</ng-container>
+<!--</c-header>-->
+
+<ng-template #userDropdown>
+  <c-dropdown [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
+    <button [caret]="false" cDropdownToggle class="py-0" aria-label="Open user menu" [cTooltip]="accountTooltipText" cTooltipPlacement="bottom">
+      <c-avatar
+        shape="rounded-1"
+        size="md"
+        src="./assets/images/user.png"
+        status="success"
+        textColor="primary"
+        alt="User avatar"
+      />
+    </button>
+    <ul cDropdownMenu class="pt-0 w-auto">
+      <li>
+        <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2">
+          {{ 'HEADER.SETTINGS' | translate }}
+        </h6>
+      </li>
+      <li></li>
+      <li>
+        <a cDropdownItem routerLink="">
+          <svg cIcon class="me-2" name="cilUser"></svg>
+          {{ 'HEADER.ACCOUNT' | translate }}
+        </a>
+      </li>
+      <li>
+        <a cDropdownItem routerLink="">
+          <svg cIcon class="me-2" name="cilSettings"></svg>
+          {{ 'HEADER.SETTINGS' | translate }}
+        </a>
+      </li>
+      <li>
+        <hr cDropdownDivider />
+      </li>
+      <li>
+        <a cDropdownItem routerLink="" (click)="Logout()">
+          <svg cIcon class="me-2" name="cilAccountLogout"></svg>
+          {{ 'AUTH.LOGOUT' | translate }}
+        </a>
+      </li>
+    </ul>
+  </c-dropdown>
+</ng-template>
+
+<ng-template #notifyDropdown>
+  <c-dropdown alignment="start" variant="nav-item">
+    <button [caret]="false" cDropdownToggle>
+      <svg cIcon class="my-1 mx-2" name="cilBell" size="lg"></svg>
+      @if (newNotifications?.length) {
+        <c-badge
+          class="position-absolute top-0 end-0"
+          color="danger-gradient"
+          shape="rounded-pill"
+        >
+          {{ newNotifications?.length ?? 0 }}
+        </c-badge>
+      }
+    </button>
+    <div cDropdownMenu class="pt-0">
+      <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold rounded-top mb-2">
+        <span>{{ 'HEADER.NOTIFICATIONS' | translate: {count: newNotifications?.length ?? 0} }}</span>
+      </h6>
+      @for (notification of newNotifications; track notification.id) {
+        <a cDropdownItem routerLink="">
+          <svg cIcon class="me-2 text-{{notification.color}}" name="{{notification.icon}}"></svg>
+          اشعار تجريبي
+        </a>
+      }
+    </div>
+  </c-dropdown>
+</ng-template>
+
+<ng-template #languageDropdown>
+  <c-dropdown alignment="end" variant="nav-item">
+    <button [caret]="false" cDropdownToggle aria-label="Open language picker">
+      <svg cIcon name="cilLanguage" size="lg"></svg>
+    </button>
+    <div cDropdownMenu>
+      <button cDropdownItem (click)="translationService.setLanguage('ar')" [class.active]="getCurrentLanguage() === 'ar'">
+        العربية
+      </button>
+
+       <button cDropdownItem (click)="translationService.setLanguage('en')" [class.active]="getCurrentLanguage() === 'en'">
+        English
+      </button>
+    </div>
+  </c-dropdown>
+</ng-template>
+
+<ng-template #activitiesLogDropDown>
+  <c-dropdown alignment="end" variant="nav-item">
+    <button [caret]="false" cDropdownToggle aria-label="Open activities log" >
+      <svg cIcon name="cilHistory" size="lg"></svg>
+    </button>
+    <div cDropdownMenu class="pt-0">
+      <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold rounded-top mb-2">
+        <span>{{ 'HEADER.ACTIVITIES' | translate: {count: activitiesLog?.length ?? 0} }}</span>
+      </h6>
+      @for (activity of activitiesLog; track activity.id) {
+        <a cDropdownItem routerLink="">
+          <svg cIcon class="me-2 text-{{activity.color}}" name="{{activity.icon}}"></svg>
+          {{activity.title}}
+        </a>
+      }
+    </div>
+  </c-dropdown>
+</ng-template>
+
+<ng-template #themeDropdown>
+  <c-dropdown alignment="end" variant="nav-item">
+    <button [caret]="false" cDropdownToggle aria-label="Open theme picker">
+      <svg cIcon [name]="icons()" size="lg"></svg>
+    </button>
+    <div cDropdownMenu>
+      @for (mode of colorModes; track mode.name) {
+        <button
+          (click)="colorMode.set(mode.name)"
+          [active]="colorMode()===mode.name"
+          cDropdownItem
+          class="d-flex align-items-center"
+        >
+          <svg cIcon class="me-2" [name]="mode.icon" size="lg"></svg>
+          @if(mode.text === "Light")
+          {
+            {{ 'THEME.LIGHT' | translate }}
+          }
+          @else if(mode.text === "Dark")
+          {
+            {{ 'THEME.DARK' | translate }}
+          }
+          @else
+          {
+            {{ 'THEME.AUTO' | translate }}
+          }
+        </button>
+      }
+    </div>
+  </c-dropdown>
+</ng-template>
